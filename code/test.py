@@ -56,3 +56,21 @@ print(classification_report(y_test, y_pred))
 print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, y_pred))
 
+results = pd.DataFrame({
+    "text": X_test.values,
+    "true_label": y_test.values,
+    "pred_label": y_pred
+})
+
+wrong = results[results["true_label"] != results["pred_label"]]
+print("\nMisclassified examples:")
+print(wrong.to_string(index=False))
+
+samples = [
+    "I want you more than anything in this world",
+    "I trust you with everything I am",
+    "I will stay with you no matter what happens"
+]
+
+for s in samples:
+    print(s, "->", model.predict([s])[0])
