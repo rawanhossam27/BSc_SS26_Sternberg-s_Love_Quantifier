@@ -673,8 +673,9 @@ print(cm)
 # Confusion matrix plots
 # =========================
 labels = ["commitment", "intimacy", "passion"]
+_cm_annot, _cm_title, _cm_axis, _cm_tick = 20, 18, 16, 14
 
-plt.figure(figsize=(6, 5))
+plt.figure(figsize=(7, 6))
 sns.heatmap(
     cm,
     annot=True,
@@ -682,11 +683,12 @@ sns.heatmap(
     cmap="Blues",
     xticklabels=labels,
     yticklabels=labels,
-    annot_kws={"size": 12}
+    annot_kws={"size": _cm_annot},
 )
-plt.title("Confusion Matrix for TextCNN Model", fontsize=14)
-plt.xlabel("Predicted Label", fontsize=12)
-plt.ylabel("True Label", fontsize=12)
+plt.tick_params(axis="both", labelsize=_cm_tick)
+plt.title("Confusion Matrix for TextCNN Model", fontsize=_cm_title)
+plt.xlabel("Predicted Label", fontsize=_cm_axis)
+plt.ylabel("True Label", fontsize=_cm_axis)
 plt.tight_layout()
 
 cm_path = output_dir / "confusion_matrix_textcnn.png"
@@ -695,7 +697,7 @@ plt.show()
 
 cm_norm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
 
-plt.figure(figsize=(6, 5))
+plt.figure(figsize=(7, 6))
 sns.heatmap(
     cm_norm,
     annot=True,
@@ -703,11 +705,12 @@ sns.heatmap(
     cmap="Blues",
     xticklabels=labels,
     yticklabels=labels,
-    annot_kws={"size": 12}
+    annot_kws={"size": _cm_annot},
 )
-plt.title("Normalized Confusion Matrix for TextCNN Model", fontsize=14)
-plt.xlabel("Predicted Label", fontsize=12)
-plt.ylabel("True Label", fontsize=12)
+plt.tick_params(axis="both", labelsize=_cm_tick)
+plt.title("Normalized Confusion Matrix for TextCNN Model", fontsize=_cm_title)
+plt.xlabel("Predicted Label", fontsize=_cm_axis)
+plt.ylabel("True Label", fontsize=_cm_axis)
 plt.tight_layout()
 
 cm_norm_path = output_dir / "confusion_matrix_textcnn_normalized.png"
@@ -775,7 +778,9 @@ plot_df.to_csv(plot_csv_path, index=False)
 # =========================
 # Distribution plot
 # =========================
-fig = plt.figure(figsize=(9, 7))
+_3d_title, _3d_axis, _3d_tick, _3d_legend, _3d_annot = 18, 16, 14, 14, 14
+
+fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection="3d")
 
 x = plot_df["intimacy"]
@@ -797,7 +802,7 @@ for _, row in plot_df.iterrows():
         row["passion"],
         row["commitment"],
         str(row["index"]),
-        fontsize=10
+        fontsize=_3d_annot,
     )
 
 legend_handles = [
@@ -805,21 +810,23 @@ legend_handles = [
     mpatches.Patch(color="blue", label="Intimacy"),
     mpatches.Patch(color="green", label="Commitment"),
 ]
-ax.legend(handles=legend_handles)
+ax.legend(handles=legend_handles, fontsize=_3d_legend)
 
-ax.set_xlabel("Intimacy")
-ax.set_ylabel("Passion")
-ax.set_zlabel("Commitment")
-ax.set_title("3D Emotional Distribution Based on TextCNN Probabilities")
+ax.set_xlabel("Intimacy", fontsize=_3d_axis)
+ax.set_ylabel("Passion", fontsize=_3d_axis)
+ax.set_zlabel("Commitment", fontsize=_3d_axis)
+ax.set_title("3D Emotional Distribution Based on TextCNN Probabilities", fontsize=_3d_title)
+for _axis in "xyz":
+    ax.tick_params(axis=_axis, labelsize=_3d_tick)
 
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 ax.set_zlim(0, 1)
 
 ax.scatter([1, 0, 0], [0, 1, 0], [0, 0, 1], s=200, c="orange")
-ax.text(1, 0, 0, "Intimacy")
-ax.text(0, 1, 0, "Passion")
-ax.text(0, 0, 1, "Commitment")
+ax.text(1, 0, 0, "Intimacy", fontsize=_3d_annot)
+ax.text(0, 1, 0, "Passion", fontsize=_3d_annot)
+ax.text(0, 0, 1, "Commitment", fontsize=_3d_annot)
 
 ax.view_init(elev=20, azim=45)
 plt.tight_layout()
@@ -873,7 +880,7 @@ y = trajectory_df["passion"]
 z = trajectory_df["commitment"]
 colors = [color_map[label] for label in trajectory_df["predicted_label"]]
 
-fig = plt.figure(figsize=(9, 7))
+fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection="3d")
 
 ax.scatter(x, y, z, c=colors, s=90)
@@ -885,20 +892,22 @@ for _, row in trajectory_df.iterrows():
         row["passion"],
         row["commitment"],
         str(row["step"]),
-        fontsize=10
+        fontsize=_3d_annot,
     )
 
-ax.set_xlabel("Intimacy")
-ax.set_ylabel("Passion")
-ax.set_zlabel("Commitment")
-ax.set_title("3D Emotional Trajectory for a Dialogue Scene Based on TextCNN")
+ax.set_xlabel("Intimacy", fontsize=_3d_axis)
+ax.set_ylabel("Passion", fontsize=_3d_axis)
+ax.set_zlabel("Commitment", fontsize=_3d_axis)
+ax.set_title("3D Emotional Trajectory for a Dialogue Scene Based on TextCNN", fontsize=_3d_title)
+for _axis in "xyz":
+    ax.tick_params(axis=_axis, labelsize=_3d_tick)
 
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 ax.set_zlim(0, 1)
 
 ax.view_init(elev=20, azim=45)
-ax.legend(handles=legend_handles, loc="upper left")
+ax.legend(handles=legend_handles, loc="upper left", fontsize=_3d_legend)
 
 plt.tight_layout()
 

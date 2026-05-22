@@ -532,60 +532,62 @@ print(cm)
 # =========================
 # Better Confusion Matrix Plot (Thesis-ready)
 # =========================
-# import seaborn as sns
-# import matplotlib.pyplot as plt
-#
-# labels = ["commitment", "intimacy", "passion"]
-#
-# plt.figure(figsize=(6,5))
-#
-# sns.heatmap(
-#     cm,
-#     annot=True,
-#     fmt="d",
-#     cmap="Blues",
-#     xticklabels=labels,
-#     yticklabels=labels,
-#     annot_kws={"size": 12}
-# )
-#
-# plt.title("Confusion Matrix for BERT Model", fontsize=14)
-# plt.xlabel("Predicted Label", fontsize=12)
-# plt.ylabel("True Label", fontsize=12)
-#
-# plt.tight_layout()
-#
-# # Save for LaTeX
-# cm_path = output_dir / "confusion_matrix_bert.png"
-# plt.savefig(cm_path, dpi=300)
-#
-# plt.show()
-#
-# # =========================
-# # Normalized Confusion Matrix
-# # =========================
-# cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-#
-# plt.figure(figsize=(6,5))
-# sns.heatmap(
-#     cm_norm,
-#     annot=True,
-#     fmt=".2f",
-#     cmap="Blues",
-#     xticklabels=labels,
-#     yticklabels=labels
-# )
-#
-# plt.xlabel("Predicted Label")
-# plt.ylabel("True Label")
-# plt.title("Normalized Confusion Matrix - BERT")
-#
-# plt.tight_layout()
-#
-# cm_norm_path = output_dir / "confusion_matrix_bert_normalized.png"
-# plt.savefig(cm_norm_path, dpi=300)
-#
-# plt.show()
+import seaborn as sns
+
+labels = ["commitment", "intimacy", "passion"]
+_cm_annot, _cm_title, _cm_axis, _cm_tick = 20, 18, 16, 14
+
+plt.figure(figsize=(7, 6))
+
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt="d",
+    cmap="Blues",
+    xticklabels=labels,
+    yticklabels=labels,
+    annot_kws={"size": _cm_annot},
+)
+
+plt.tick_params(axis="both", labelsize=_cm_tick)
+plt.title("Confusion Matrix for BERT Model", fontsize=_cm_title)
+plt.xlabel("Predicted Label", fontsize=_cm_axis)
+plt.ylabel("True Label", fontsize=_cm_axis)
+
+plt.tight_layout()
+
+cm_path = output_dir / "confusion_matrix_bert.png"
+plt.savefig(cm_path, dpi=300)
+
+plt.show()
+
+# =========================
+# Normalized Confusion Matrix
+# =========================
+cm_norm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
+
+plt.figure(figsize=(7, 6))
+sns.heatmap(
+    cm_norm,
+    annot=True,
+    fmt=".2f",
+    cmap="Blues",
+    xticklabels=labels,
+    yticklabels=labels,
+    annot_kws={"size": _cm_annot},
+)
+
+plt.tick_params(axis="both", labelsize=_cm_tick)
+plt.xlabel("Predicted Label", fontsize=_cm_axis)
+plt.ylabel("True Label", fontsize=_cm_axis)
+plt.title("Normalized Confusion Matrix - BERT", fontsize=_cm_title)
+
+plt.tight_layout()
+
+cm_norm_path = output_dir / "confusion_matrix_bert_normalized.png"
+plt.savefig(cm_norm_path, dpi=300)
+
+plt.show()
 
 
 # Optional: save report to file
@@ -655,7 +657,9 @@ output_dir.mkdir(parents=True, exist_ok=True)
 plot_df.to_csv(plot_csv_path, index=False)
 
 # Create 3D scatter plot
-fig = plt.figure(figsize=(9, 7))
+_3d_title, _3d_axis, _3d_tick, _3d_legend, _3d_annot = 18, 16, 14, 14, 14
+
+fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection="3d")
 
 x = plot_df["intimacy"]
@@ -671,7 +675,7 @@ for _, row in plot_df.iterrows():
         row["passion"],
         row["commitment"],
         str(row["index"]),
-        fontsize=10
+        fontsize=_3d_annot,
     )
 color_map = {
     "passion": "red",
@@ -689,22 +693,23 @@ legend_handles = [
     mpatches.Patch(color="green", label="Commitment"),
 ]
 
-ax.legend(handles=legend_handles)
+ax.legend(handles=legend_handles, fontsize=_3d_legend)
 
-
-ax.set_xlabel("Intimacy")
-ax.set_ylabel("Passion")
-ax.set_zlabel("Commitment")
-ax.set_title("3D Distribution of BERT Emotion Probabilities")
+ax.set_xlabel("Intimacy", fontsize=_3d_axis)
+ax.set_ylabel("Passion", fontsize=_3d_axis)
+ax.set_zlabel("Commitment", fontsize=_3d_axis)
+ax.set_title("3D Distribution of BERT Emotion Probabilities", fontsize=_3d_title)
+for _axis in "xyz":
+    ax.tick_params(axis=_axis, labelsize=_3d_tick)
 
 ax.set_xlim(0,1)
 ax.set_ylim(0,1)
 ax.set_zlim(0,1)
 
 ax.scatter([1,0,0], [0,1,0], [0,0,1], s=200)
-ax.text(1,0,0,"Intimacy")
-ax.text(0,1,0,"Passion")
-ax.text(0,0,1,"Commitment")
+ax.text(1, 0, 0, "Intimacy", fontsize=_3d_annot)
+ax.text(0, 1, 0, "Passion", fontsize=_3d_annot)
+ax.text(0, 0, 1, "Commitment", fontsize=_3d_annot)
 plt.tight_layout()
 
 ax.view_init(elev=20, azim=45)
@@ -777,7 +782,7 @@ x = trajectory_df["intimacy"]
 y = trajectory_df["passion"]
 z = trajectory_df["commitment"]
 
-fig = plt.figure(figsize=(9, 7))
+fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection="3d")
 
 # Scatter points
@@ -793,14 +798,16 @@ for _, row in trajectory_df.iterrows():
         row["passion"],
         row["commitment"],
         str(row["step"]),
-        fontsize=10
+        fontsize=_3d_annot,
     )
 
 # Axis labels
-ax.set_xlabel("Intimacy")
-ax.set_ylabel("Passion")
-ax.set_zlabel("Commitment")
-ax.set_title("3D Emotional Trajectory for a Dialogue Scene")
+ax.set_xlabel("Intimacy", fontsize=_3d_axis)
+ax.set_ylabel("Passion", fontsize=_3d_axis)
+ax.set_zlabel("Commitment", fontsize=_3d_axis)
+ax.set_title("3D Emotional Trajectory for a Dialogue Scene", fontsize=_3d_title)
+for _axis in "xyz":
+    ax.tick_params(axis=_axis, labelsize=_3d_tick)
 
 # Keep same scale
 ax.set_xlim(0, 1)
@@ -816,7 +823,7 @@ legend_handles = [
     mpatches.Patch(color="blue", label="Intimacy"),
     mpatches.Patch(color="green", label="Commitment"),
 ]
-ax.legend(handles=legend_handles, loc="upper left")
+ax.legend(handles=legend_handles, loc="upper left", fontsize=_3d_legend)
 
 plt.tight_layout()
 
